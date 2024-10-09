@@ -8,21 +8,24 @@ class DownloadService:
     @staticmethod
     async def download_song(url: str) -> tuple:
         logger.info(f"Starting download for URL: {url}")
-        ydl_opts = {
-            'format': 'bestaudio/best',
-            'postprocessors': [{
-                'key': 'FFmpegExtractAudio',
-                'preferredcodec': 'mp3',
-                'preferredquality': '192',
-            }],
-            'outtmpl': '%(title)s.%(ext)s',
-            'verbose': True,  # Add verbose output for debugging
-        }
 
         with tempfile.TemporaryDirectory() as temp_dir:
             prev_cwd = os.getcwd()
-            os.chdir(temp_dir)
             logger.debug(f"Changed working directory to: {temp_dir}")
+            
+            if not os.path.exists(temp_dir):
+                os.chdir(temp_dir)
+            
+            ydl_opts = {
+                'format': 'bestaudio/best',
+                'postprocessors': [{
+                    'key': 'FFmpegExtractAudio',
+                    'preferredcodec': 'mp3',
+                    'preferredquality': '192',
+                }],
+                'outtmpl': os.path.join(temp_dir, '%(title)s.%(ext)s'),
+                'verbose': True,
+            }
 
             try:
                 with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -30,13 +33,15 @@ class DownloadService:
                     info = ydl.extract_info(url, download=True)
                     if 'title' not in info:
                         raise ValueError("Unable to extract video title")
+                    logger.debug(f"Video info extracted: {info}")
                     filename = f"{info['title']}.mp3"
                 
-                if not os.path.exists(filename):
-                    logger.error(f"File not found after download: {filename}")
-                    raise FileNotFoundError(f"File not found: {filename}")
-                
                 file_path = os.path.join(temp_dir, filename)
+                
+                if not os.path.exists(file_path):
+                    logger.error(f"File not found after download: {file_path}")
+                    raise FileNotFoundError(f"File not found: {file_path}")
+                
                 logger.info(f"Successfully downloaded: {filename}")
                 return file_path, filename
             
@@ -52,7 +57,6 @@ class DownloadService:
             except Exception as e:
                 logger.error(f"An unexpected error occurred during download: {str(e)}", exc_info=True)
                 raise HTTPException(status_code=500, detail=f"An unexpected error occurred: {str(e)}")
-            
             finally:
                 os.chdir(prev_cwd)
                 logger.debug(f"Changed working directory back to: {prev_cwd}")

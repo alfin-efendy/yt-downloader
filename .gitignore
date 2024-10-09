@@ -12,6 +12,7 @@ venv/
 # Log files
 logs/
 *.log
+*.log.*
 
 # Dependency installation files
 requirements.txt
