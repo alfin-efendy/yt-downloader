@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "yt-downloader"
+version = "0.1.0"
+description = ""
+authors = ["Alfin Pratama Efendy <alfin1993@gmail.com>"]
+readme = "README.md"
+packages = [{include = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.68.0"
+uvicorn = "^0.15.0"
+pydantic = "^1.8.2"
+python-dotenv = "^0.19.0"
+sqlalchemy = "^1.4.23"
+yt-dlp = "^2023.3.4"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.5"
+black = "^21.7b0"
+isort = "^5.9.3"
+flake8 = "^3.9.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,30 @@
+# Python bytecode files
+__pycache__/
+
+# Virtual environment directories
+venv/
+.env/
+
+# IDE project files
+.idea/
+.vscode/
+
+# Log files
+logs/
+*.log
+
+# Dependency installation files
+requirements.txt
+Pipfile
+
+# Database files
+db.sqlite3
+
+# Output files
+docs/_build/
+
+# Poetry build directories
+poetry-build/
+
+# Environment variables file
+.env
