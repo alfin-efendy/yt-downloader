@@ -29,3 +29,8 @@ poetry-build/
 
 # Environment variables file
 .env
+
+# Media files
+*.mp3
+*.wav
+*.mp4

@@ -3,18 +3,20 @@ import tempfile
 from fastapi import HTTPException
 import yt_dlp
 from src.core.logging_config import logger
+from src.config.settings import Settings
 
 class DownloadService:
     @staticmethod
     async def download_song(url: str) -> tuple:
         logger.info(f"Starting download for URL: {url}")
+        download_dir = Settings().DOWNLOAD_DIR
 
         with tempfile.TemporaryDirectory() as temp_dir:
             prev_cwd = os.getcwd()
-            logger.debug(f"Changed working directory to: {temp_dir}")
+            logger.debug(f"Changed working directory to: {download_dir}")
             
-            if not os.path.exists(temp_dir):
-                os.chdir(temp_dir)
+            if not os.path.exists(download_dir):
+                os.makedirs(download_dir)
             
             ydl_opts = {
                 'format': 'bestaudio/best',
@@ -23,7 +25,7 @@ class DownloadService:
                     'preferredcodec': 'mp3',
                     'preferredquality': '192',
                 }],
-                'outtmpl': os.path.join(temp_dir, '%(title)s.%(ext)s'),
+                'outtmpl': os.path.join(download_dir, '%(title)s.%(ext)s'),
                 'verbose': True,
             }
 
@@ -36,7 +38,7 @@ class DownloadService:
                     logger.debug(f"Video info extracted: {info}")
                     filename = f"{info['title']}.mp3"
                 
-                file_path = os.path.join(temp_dir, filename)
+                file_path = os.path.join(download_dir, filename)
                 
                 if not os.path.exists(file_path):
                     logger.error(f"File not found after download: {file_path}")
