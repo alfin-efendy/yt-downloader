@@ -9,7 +9,7 @@ class DownloadService:
     @staticmethod
     async def download_song(url: str) -> tuple:
         logger.info(f"Starting download for URL: {url}")
-        download_dir = Settings().DOWNLOAD_DIR
+        download_dir = os.path.join(tempfile.gettempdir(), "songs")
 
         with tempfile.TemporaryDirectory() as temp_dir:
             prev_cwd = os.getcwd()
@@ -35,7 +35,6 @@ class DownloadService:
                     info = ydl.extract_info(url, download=True)
                     if 'title' not in info:
                         raise ValueError("Unable to extract video title")
-                    logger.debug(f"Video info extracted: {info}")
                     filename = f"{info['title']}.mp3"
                 
                 file_path = os.path.join(download_dir, filename)
