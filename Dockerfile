@@ -68,6 +68,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN useradd --create-home appuser && \
     chown -R appuser:appuser /app
 
+    RUN echo "machine youtube login $YOUTUBE_USERNAME password $YOUTUBE_PASSWORD" > ~/.netrc
+
 # Switch to non-root user
 USER appuser
 
