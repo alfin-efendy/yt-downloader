@@ -27,6 +27,7 @@ class DownloadService:
                 }],
                 'outtmpl': os.path.join(download_dir, '%(title)s.%(ext)s'),
                 'verbose': True,
+                'usenetrc': True,
             }
 
             try:
