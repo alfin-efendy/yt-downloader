@@ -13,6 +13,7 @@ class DownloadService:
 
         with tempfile.TemporaryDirectory() as temp_dir:
             prev_cwd = os.getcwd()
+            settings = Settings()
             logger.debug(f"Changed working directory to: {download_dir}")
             
             if not os.path.exists(download_dir):
@@ -28,6 +29,7 @@ class DownloadService:
                 'outtmpl': os.path.join(download_dir, '%(title)s.%(ext)s'),
                 'verbose': True,
                 'usenetrc': True,
+                'proxy':settings.PROXY,                
             }
 
             try:
